@@ -1,0 +1,1102 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="http://github.com/bgrins/bindWithDelay/blob/master/bindWithDelay.js"></script>
+<script>(function(c){c.fn.stupidtable=function(b){return this.each(function(){var a=c(this);b=b||{};b=c.extend({},c.fn.stupidtable.default_sort_fns,b);a.data("sortFns",b);a.on("click.stupidtable","thead th",function(){c(this).stupidsort()})})};c.fn.stupidsort=function(b){var a=c(this),g=0,f=c.fn.stupidtable.dir,e=a.closest("table"),k=a.data("sort")||null;if(null!==k){a.parents("tr").find("th").slice(0,c(this).index()).each(function(){var a=c(this).attr("colspan")||1;g+=parseInt(a,10)});var d;1==arguments.length?
+d=b:(d=b||a.data("sort-default")||f.ASC,a.data("sort-dir")&&(d=a.data("sort-dir")===f.ASC?f.DESC:f.ASC));e.trigger("beforetablesort",{column:g,direction:d});e.css("display");setTimeout(function(){var b=[],l=e.data("sortFns")[k],h=e.children("tbody").children("tr");h.each(function(a,e){var d=c(e).children().eq(g),f=d.data("sort-value");"undefined"===typeof f&&(f=d.text(),d.data("sort-value",f));b.push([f,e])});b.sort(function(a,b){return l(a[0],b[0])});d!=f.ASC&&b.reverse();h=c.map(b,function(a){return a[1]});
+e.children("tbody").append(h);e.find("th").data("sort-dir",null).removeClass("sorting-desc sorting-asc");a.data("sort-dir",d).addClass("sorting-"+d);e.trigger("aftertablesort",{column:g,direction:d});e.css("display")},10);return a}};c.fn.updateSortVal=function(b){var a=c(this);a.is("[data-sort-value]")&&a.attr("data-sort-value",b);a.data("sort-value",b);return a};c.fn.stupidtable.dir={ASC:"asc",DESC:"desc"};c.fn.stupidtable.default_sort_fns={"int":function(b,a){return parseInt(b,10)-parseInt(a,10)},
+"float":function(b,a){return parseFloat(b)-parseFloat(a)},string:function(b,a){return b.localeCompare(a)},"string-ins":function(b,a){b=b.toLocaleLowerCase();a=a.toLocaleLowerCase();return b.localeCompare(a)}}})(jQuery);
+</script>
+<script>
+    $(function(){
+        $("table").stupidtable();
+    });
+  </script>
+<script>/**
+ * jquery.filterTable
+ *
+ * This plugin will add a search filter to tables. When typing in the filter,
+ * any rows that do not contain the filter will be hidden.
+ *
+ * Utilizes bindWithDelay() if available. https://github.com/bgrins/bindWithDelay
+ *
+ * @version v1.5.4
+ * @author Sunny Walker, swalker@hawaii.edu
+ * @license MIT
+ */
+!function($){var e=$.fn.jquery.split("."),t=parseFloat(e[0]),i=parseFloat(e[1]);$.expr[":"].filterTableFind=2>t&&8>i?function(e,t,i){return $(e).text().toUpperCase().indexOf(i[3].toUpperCase())>=0}:jQuery.expr.createPseudo(function(e){return function(t){return $(t).text().toUpperCase().indexOf(e.toUpperCase())>=0}}),$.fn.filterTable=function(e){var t={autofocus:!1,callback:null,containerClass:"filter-table",containerTag:"p",hideTFootOnFilter:!1,highlightClass:"alt",inputSelector:null,inputName:"",inputType:"search",label:"Filter:",minRows:8,placeholder:"search this table",preventReturnKey:!0,quickList:[],quickListClass:"quick",quickListGroupTag:"",quickListTag:"a",visibleClass:"visible"},i=function(e){return e.replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;").replace(/>/g,"&gt;")},n=$.extend({},t,e),a=function(e,t){var i=e.find("tbody");""===t?(i.find("tr").show().addClass(n.visibleClass),i.find("td").removeClass(n.highlightClass),n.hideTFootOnFilter&&e.find("tfoot").show()):(i.find("tr").hide().removeClass(n.visibleClass),n.hideTFootOnFilter&&e.find("tfoot").hide(),i.find("td").removeClass(n.highlightClass).filter(':filterTableFind("'+t.replace(/(['"])/g,"\\$1")+'")').addClass(n.highlightClass).closest("tr").show().addClass(n.visibleClass)),n.callback&&n.callback(t,e)};return this.each(function(){var e=$(this),t=e.find("tbody"),l=null,s=null,r=null,o=!0;"TABLE"===e[0].nodeName&&t.length>0&&(0===n.minRows||n.minRows>0&&t.find("tr").length>n.minRows)&&!e.prev().hasClass(n.containerClass)&&(n.inputSelector&&1===$(n.inputSelector).length?(r=$(n.inputSelector),l=r.parent(),o=!1):(l=$("<"+n.containerTag+" />"),""!==n.containerClass&&l.addClass(n.containerClass),l.prepend(n.label+" "),r=$('<input type="'+n.inputType+'" placeholder="'+n.placeholder+'" name="'+n.inputName+'" />'),n.preventReturnKey&&r.on("keydown",function(e){return 13===(e.keyCode||e.which)?(e.preventDefault(),!1):void 0})),n.autofocus&&r.attr("autofocus",!0),$.fn.bindWithDelay?r.bindWithDelay("keyup",function(){a(e,$(this).val())},200):r.bind("keyup",function(){a(e,$(this).val())}),r.bind("click search",function(){a(e,$(this).val())}),o&&l.append(r),n.quickList.length>0&&(s=n.quickListGroupTag?$("<"+n.quickListGroupTag+" />"):l,$.each(n.quickList,function(e,t){var a=$("<"+n.quickListTag+' class="'+n.quickListClass+'" />');a.text(i(t)),"A"===a[0].nodeName&&a.attr("href","#"),a.bind("click",function(e){e.preventDefault(),r.val(t).focus().trigger("click")}),s.append(a)}),s!==l&&l.append(s)),o&&e.before(l))})}}(jQuery);
+</script>
+<script>
+$(document).ready(function() {
+        $('table').filterTable({ // apply filterTable to all tables on this page
+		})
+	});
+</script>
+<style type="text/css">
+    table {
+    border-collapse: collapse;
+    }
+    th, td {
+    padding: 3px 8px;
+    border: 1px solid #999;
+    }
+    th {
+    background-color: #5E1315;
+    }
+    th[data-sort]{
+    cursor:pointer;
+    }
+    tr.awesome{
+    color: red;
+    }
+</style>
+
+ <table id="table">
+    <thead>
+        <tr>
+            <th data-sort="string" scope="col" class="" style="text-align: center; vertical-align: middle; width: 350px;"><span style="color: rgb(255, 255, 255);">Action</span></th>
+            <th data-sort="string" scope="col" class="" style="text-align: center; vertical-align: middle; width: 125px;"><span style="color: rgb(255, 255, 255);">Element(s)</span></th>
+            <th data-sort="string" scope="col" class="" style="text-align: center; vertical-align: middle;"><span style="color: rgb(255, 255, 255);">Lead Entity</span></th>
+            <th data-sort="string" scope="col" class="" style="text-align: center; vertical-align: middle;"><span style="color: rgb(255, 255, 255);">Support</span></th>
+            <th data-sort="string" scope="col" class="" style="text-align: center; vertical-align: middle;"><span style="color: rgb(255, 255, 255);">Approximate Timeline</span></th>
+            <th data-sort="string" scope="col" class="" style="text-align: center; vertical-align: middle;"><span style="color: rgb(255, 255, 255);">Town Meeting Action Required</span></th>
+            <th data-sort="string" scope="col" class="" style="text-align: center; vertical-align: middle;"><span style="color: rgb(255, 255, 255);">Resources Needed</span></th>
+            <th data-sort="string" scope="col" class="" style="text-align: center; vertical-align: middle;"><span style="color: rgb(255, 255, 255);">In Process</span></th>
+            <th data-sort="string" scope="col" class="" style="text-align: center; vertical-align: middle;"><span style="color: rgb(255, 255, 255);">Completed</span></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Recodify and update the Zoning Bylaw</td>
+            <td>Land Use, Open Space</td>
+            <td>ARB</td>
+            <td>ZBA</td>
+            <td>Near-Term</td>
+            <td>Yes</td>
+            <td>Consultant</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td class="" style="">Reduce the number of uses that require a special permit; replace some special permits with a system of uses by right subject to performance standards</td>
+            <td>Land Use</td>
+            <td>ARB</td>
+            <td>A-TED, BOS</td>
+            <td>Near-Term</td>
+            <td>Yes</td>
+            <td>Consultant</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Consolidate and redefine the business zoning districts on Massachusetts Avenue</td>
+            <td>Land Use, Economic Dev.</td>
+            <td>ARB</td>
+            <td>A-TED, BOS</td>
+            <td>Near-Term</td>
+            <td>Yes</td>
+            <td>Consultant</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Create commercial and industrial district design guidelines and incorporate them by reference in the Zoning Bylaw</td>
+            <td>Land Use, Economic Dev.</td>
+            <td>ARB</td>
+            <td>Staff</td>
+            <td>Near-Term</td>
+            <td>Yes</td>
+            <td>Consultant</td>
+            <td>Yes</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Amend the Zoning Bylaw to provide redevelopment incentives in all or selected portions of the business districts on Massachusetts Avenue, Broadway, and Medford Street (incentives may include more than zoning)</td>
+            <td>Land Use, Economic Dev.</td>
+            <td>ARB</td>
+            <td>BOS</td>
+            <td>Near-Term</td>
+            <td>Yes</td>
+            <td>Consultant</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Amend the Zoning Bylaw to clarify that mixed-use development is permitted along sections of Massachusetts Avenue, Broadway, and Medford Street, and clarify regulations and procedures</td>
+            <td>Land Use, Economic Dev., Housing</td>
+            <td>ARB</td>
+            <td>Staff</td>
+            <td>Near-Term</td>
+            <td>Yes</td>
+            <td>Consultant</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Consider mechanisms to ensure a balance of housing and a significant business component in future mixed use buildings</td>
+            <td>Land Use, Economic Dev.</td>
+            <td>ARB</td>
+            <td>Staff</td>
+            <td>Near-Term</td>
+            <td>Yes</td>
+            <td>Consultant</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Work with DHCD to determine Arlington’s status under the Chapter 40B 1.5 percent land area rule</td>
+            <td>Housing, Land Use</td>
+            <td>PCD</td>
+            <td>TMgr, BOS</td>
+            <td>Near-Term</td>
+            <td>No</td>
+            <td>Existing Staff</td>
+            <td>Yes</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Study and plan for increasing the supply of smaller, “over-55” active senior market-rate housing and for affordable or subsidized housing to meet Arlington’s population trends</td>
+            <td>Housing</td>
+            <td>PCD</td>
+            <td>HCA</td>
+            <td>Near-Term</td>
+            <td>Possibly</td>
+            <td>Existing Staff and Volunteers; Possibly Consultant</td>
+            <td>Yes</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Create a Facilities Manager position; transfer the maintenance budget and building maintenance personnel from the School Department to Facilities Manager</td>
+            <td>Public Facilities</td>
+            <td>TM</td>
+            <td>BOS, APS, DPW</td>
+            <td>Near-Term</td>
+            <td>Yes</td>
+            <td>New Staff</td>
+            <td>Yes</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Create an Affordable Housing Plan (Housing Production Plan) and submit to DHCD for approval under Chapter 40B</td>
+            <td>Land Use, Housing</td>
+            <td>ARB</td>
+            <td>PCD</td>
+            <td>Near-Term</td>
+            <td>No</td>
+            <td>Consultant</td>
+            <td>Yes</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Initiate a complete, safe Sidewalks Plan town-wide, in coordination with the Safe Routes to School (SRTS) pro gram. Prioritize improvements for new and existing sidewalks</td>
+            <td>Transportation, Public Facilities</td>
+            <td>DPW</td>
+            <td>APS, TAC</td>
+            <td>Near-Term</td>
+            <td>No</td>
+            <td>Existing Staff, Consultant</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Adopt a plan for future sidewalk paving design treatments according to density and road geometry, consistent with the Sidewalks Plan</td>
+            <td>Public Facilities, Transportation</td>
+            <td>DPW</td>
+            <td>PCD</td>
+            <td>Near-Term</td>
+            <td>No</td>
+            <td>Existing Staff</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Amend the Zoning Bylaw to strengthen bicycle parking regulations in and adjacent to business districts and multifamily developments</td>
+            <td>Transportation, Housing, Economic Dev.</td>
+            <td>ARB</td>
+            <td>BAC</td>
+            <td>Near-Term</td>
+            <td>Yes</td>
+            <td>Consultant</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Implement the recommendations in the 2014 Arlington Center parking study</td>
+            <td>Transportation, Public Facilities, Economic Dev.</td>
+            <td>BOS</td>
+            <td>ARB, DPW</td>
+            <td>Near-Term</td>
+            <td>No</td>
+            <td>TBD</td>
+            <td>Yes</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Allocate CDBG and CPA resources to meet local housing needs and work toward meeting Town’s affordable housing goal of 1.5 percent land area for affordable housing (or 10 percent affordable units, if achievable sooner)</td>
+            <td>Housing, Land Use</td>
+            <td>BOS</td>
+            <td>PCD</td>
+            <td>Near-Term</td>
+            <td>Yes</td>
+            <td>Existing Staff</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Create a comprehensive plan for the Mill Brook study area</td>
+            <td>Land Use, Open Space, Economic Dev., Housing, Historic/Cultural, Transportation</td>
+            <td>ARB</td>
+            <td>CC, BOS</td>
+            <td>Near-Term</td>
+            <td>Yes</td>
+            <td>Consultant</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Complete a comprehensive historic resources inventory and survey, including buildings, structures and landscapes</td>
+            <td>Historic/Cultural, Economic Dev.</td>
+            <td>HC</td>
+            <td>PCD</td>
+            <td>Near-Term</td>
+            <td>Possibly</td>
+            <td>Consultant</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Seek Massachusetts Survey and Planning Grant funds to complete historic resources survey</td>
+            <td>Historic/Cultural</td>
+            <td>HC</td>
+            <td>PCD</td>
+            <td>Near-Term</td>
+            <td>No (unless local match is required)</td>
+            <td>Existing Staff &amp; Volunteers; Consultant"</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Develop a plan for universal access to recreation facilities, parks, and trails</td>
+            <td>Public Facilities, Open Space</td>
+            <td>DPW, PRC</td>
+            <td>DC</td>
+            <td>Near-Term</td>
+            <td>Yes</td>
+            <td>Existing Staff &amp; Volunteers; Consultant"</td>
+            <td>Yes</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Study and consider amending setbacks, floor-area-ratios and other techniques that could address concern for neighbor impacts of new large homes constructed in existing established residential neighborhoods</td>
+            <td>Housing, Land Use</td>
+            <td>PCD</td>
+            <td>ARB, HC</td>
+            <td>Near-Term</td>
+            <td>Possibly</td>
+            <td>Existing Staff</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Develop a Tree Inventory and Management Plan, to include locations for new and replacement trees, planned maintenance, and appropriate tree species selection</td>
+            <td>Open Space, Economic Dev., Housing</td>
+            <td>DPW</td>
+            <td>Tree Comm.</td>
+            <td>Near-Term</td>
+            <td>No</td>
+            <td>Existing Staff &amp;, Volunteers</td>
+            <td>Yes</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Address ADA requirements, improved lighting, signs and signalization at street crossings, for the Minuteman Bikeway to give more visibility to pedestrians and bicyclists, and speed control to drivers</td>
+            <td>Transportation, Open Space, Public Facilities</td>
+            <td>DPW</td>
+            <td>DC, BAC</td>
+            <td>Near-Term</td>
+            <td>Yes</td>
+            <td>Consultant</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Implement the Community Preservation Act funding process</td>
+            <td>Open Space, Housing, Historic/Cultural, Public Facilities</td>
+            <td>BOS</td>
+            <td>HC, OSC, AHC</td>
+            <td>Near-Term</td>
+            <td>Yes</td>
+            <td>Existing Staff, Technical Assistance from CPA Coalition</td>
+            <td>Yes</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Determine “right size” parking requirements based on actual parking need for different commercial centers</td>
+            <td>Transportation, Land Use, Housing, Economic Dev.</td>
+            <td>TAC</td>
+            <td>Staff</td>
+            <td>Near-Term</td>
+            <td>Yes</td>
+            <td>Consultant</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Amend the Zoning Bylaw to update parking requirements</td>
+            <td>Housing, Public Facilities, Transportation</td>
+            <td>BOS</td>
+            <td>TAC</td>
+            <td>Near-Term</td>
+            <td>Yes</td>
+            <td>TBD</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Review and strengthen demolition delay bylaw; consider bylaw amendment for procedures and administration of demolition delay. Consider technical administrative support to HC for Demolition Delay</td>
+            <td>Historic/Cultural, Land Use</td>
+            <td>HC, ARB</td>
+            <td>Staff</td>
+            <td>Near-Term</td>
+            <td>Yes</td>
+            <td>Existing Volunteers &amp; Staff; possibly Consultant or Technical Assistance from MHC</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Consider Zoning Bylaw amendments to allow flexibility in dimensional requirements and use regulations for projects that will preserve historic properties</td>
+            <td>Land Use, Historic/Cultural</td>
+            <td>ARB</td>
+            <td>Staff</td>
+            <td>Near-Term</td>
+            <td>Yes</td>
+            <td>Consultant</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Identify intersections with pedestrian safety issues and prioritize improvements for problem intersections</td>
+            <td>Transportation</td>
+            <td>DPW</td>
+            <td>TAC</td>
+            <td>Near-Term</td>
+            <td>Yes</td>
+            <td>TBD</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Study the benefits of Certified Local Government (CLG) designation for the Arlington Historical Commission</td>
+            <td>Historic/Cultural</td>
+            <td>HC</td>
+            <td>BOS</td>
+            <td>Near-Term</td>
+            <td>No</td>
+            <td>Existing Staff &amp; Volunteers</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Establish a Planned Preventive Maintenance (PPM) program for all Town-owned buildings and infrastructure, including energy efficiency</td>
+            <td>Public Facilities</td>
+            <td>TMgr</td>
+            <td>DPW, BMC</td>
+            <td>Near-Term</td>
+            <td>Yes</td>
+            <td>Consultant, Existing and New Staff</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Study and develop a plan for addressing Arlington’s long-term cemetery needs</td>
+            <td>Public Facilities</td>
+            <td>DPW</td>
+            <td>BOS</td>
+            <td>Near-Term</td>
+            <td>Yes</td>
+            <td>TBD</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Monitor parking trends in all commercial districts</td>
+            <td>Transportation, Economic Dev.</td>
+            <td>BOS</td>
+            <td>TAC, DPW, APS</td>
+            <td>Near-Term</td>
+            <td>No</td>
+            <td>Existing Staff</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Consider a Parking Management Study for Arlington Heights</td>
+            <td>Transportation, Economic Dev.</td>
+            <td>BOS</td>
+            <td>TAC, DPW</td>
+            <td>Near-Term</td>
+            <td>Yes</td>
+            <td>Consultant</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Develop a Master Plan Implementation Plan, including measurable indicators of progress, times of completion/ milestones, responsible parties, public involvement</td>
+            <td>ALL</td>
+            <td>PCD</td>
+            <td>ARB</td>
+            <td>Near-Term</td>
+            <td>No</td>
+            <td>Existing Staff</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Develop schedule and reporting program on Implementation progress</td>
+            <td>ALL</td>
+            <td>PCD</td>
+            <td>ARB</td>
+            <td>Near-Term</td>
+            <td>No</td>
+            <td>Existing Staff</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Select an Implementation Committee of interested MPAC members to oversee implementation in first year, with new members added for subsequent years</td>
+            <td>ALL</td>
+            <td>TMgr, MPAC</td>
+            <td>ARB, BOS</td>
+            <td>Near-Term</td>
+            <td>No</td>
+            <td>Existing &amp; New Volunteers</td>
+            <td>Yes</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Review open space requirements in Zoning Bylaw. Consider roof gardens and other usable open space</td>
+            <td>Land Use, Open Space</td>
+            <td>ARB</td>
+            <td>ZBA</td>
+            <td>Near-Term</td>
+            <td>Yes</td>
+            <td>Existing Staff &amp; Volunteers</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Adopt a complete streets policy to accommodate all street users when improving public streets and sidewalks</td>
+            <td>Land Use, Transportation, Public Facilities, Economic Dev.</td>
+            <td>BOS</td>
+            <td>TAC, DPW</td>
+            <td>Near-Term</td>
+            <td>Yes</td>
+            <td>Existing Staff, Consultant (possibly)</td>
+            <td>Yes</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Use more native and natural choices for landscaping on Town-owned properties; consider replacement of some grass areas with native groundcovers; consider a bylaw to require more native landscaping for new developments</td>
+            <td>Open Space, Public Facilities</td>
+            <td>PCD</td>
+            <td>CC, DPW</td>
+            <td>Mid-Term</td>
+            <td>Yes</td>
+            <td>Existing Staff &amp; Volunteers</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Identify and study small parcels of open space that could be acquired with Community Preservation Act funds</td>
+            <td>Natural Resource, Open Space</td>
+            <td>OSC</td>
+            <td>Staff</td>
+            <td>Mid-Term</td>
+            <td>Yes</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Study methods of regulating the removal of mature trees on private property; research and consider methods used in other communities</td>
+            <td>Land Use, Natural Resource, Open Space</td>
+            <td>ARB, CC</td>
+            <td>Staff, CPC</td>
+            <td>Mid-Term</td>
+            <td>Yes</td>
+            <td>Consultant</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Consider establishing Neighborhood Conservation Districts with design review standards for architecture, mature trees and landscaping, open space, walkways, and other features</td>
+            <td>Land Use, Natural Resource, Historic/Cultural</td>
+            <td>ARB, HC</td>
+            <td>Staff</td>
+            <td>Mid-Term</td>
+            <td>Yes</td>
+            <td>Consultant</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Consider additional staffing and funding to maintain the Town’s outdoor facilities: parks, recreational, and open spaces</td>
+            <td>Open Space, Public Facilities</td>
+            <td>DPW</td>
+            <td>PRC, OSC</td>
+            <td>Mid-Term</td>
+            <td>Yes</td>
+            <td>Funding</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Identify and promote locations suitable for high quality office buildings or an innovation park, and amend the Zoning Bylaw as necessary to encourage them</td>
+            <td>Economic Dev., Land Use</td>
+            <td>PCD</td>
+            <td>ARB</td>
+            <td>Mid-Term</td>
+            <td>Yes</td>
+            <td>Existing Staff, Consultant</td>
+            <td>Yes</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Update Arlington’s sustainability action plan and address Arlington’s concerns about flooding and climate change adaptation</td>
+            <td>Open Space</td>
+            <td>SA</td>
+            <td>LEMA</td>
+            <td>Mid-Term</td>
+            <td>Yes</td>
+            <td>Existing Volunteers &amp; Staff</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Conduct a parking study of residential neighborhoods, starting in East Arlington, of both unregulated all day parking and overnight parking</td>
+            <td>Housing, Land Use, Transportation</td>
+            <td>TAC</td>
+            <td>Staff</td>
+            <td>Mid-Term</td>
+            <td>Yes</td>
+            <td>Consultant</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Identify options for, and resolve, the Town’s land needs for snow storage and other emergency needs</td>
+            <td>Public Facilities</td>
+            <td>DPW</td>
+            <td>BOS</td>
+            <td>Mid-Term</td>
+            <td>Yes</td>
+            <td>Consultant</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Evaluate aging-in-place needs as part of Housing Plan</td>
+            <td>Housing</td>
+            <td>CoA</td>
+            <td>PCD, AHA</td>
+            <td>Mid-Term</td>
+            <td>No</td>
+            <td>Consultant &amp; Existing Staff</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Evaluate amending the Zoning Bylaw to allow Transfer of Development Rights (TDR), identifying both sending areas and receiving areas</td>
+            <td>Land Use, Housing, Open Space</td>
+            <td>ARB</td>
+            <td>CC, PCD</td>
+            <td>Mid-Term</td>
+            <td>Yes</td>
+            <td>Consultants</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Work with a non-profit entity to function as a TDR land bank</td>
+            <td>Land Use, Housing, Open Space</td>
+            <td>PCD</td>
+            <td>CC, OSC</td>
+            <td>Mid-Term</td>
+            <td>Possibly</td>
+            <td>Consultant, Existing Staff</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Pursue strategies to protect vacant land in the southeast corner of Arlington near Alewife Station and Thorndike Field</td>
+            <td>Land Use, Open Space</td>
+            <td>ARB</td>
+            <td>CC, OS</td>
+            <td>Mid-Term</td>
+            <td>Yes</td>
+            <td>Consultant</td>
+            <td>Yes</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Develop long-term capital improvement and maintenance plans for town-owned historic buildings, structures, parks, cemeteries, and monuments</td>
+            <td>Historic/Cultural, CPC, Public Facilities</td>
+            <td>PCD</td>
+            <td>HC, BOS, PCD, DPW</td>
+            <td>Mid-Term</td>
+            <td>Yes</td>
+            <td>Consultant</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Establish asset management policies and institute a regular process for evaluating need to retain town-owned properties; institute surplus property policy</td>
+            <td>Public Facilities</td>
+            <td>TMgr</td>
+            <td>BOS, CPC</td>
+            <td>Mid-Term</td>
+            <td>No</td>
+            <td>Existing Staff &amp; Volunteers</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Provide safe connections between the Minuteman Bikeway and the three main commercial centers. Equip corridors with wayfinding signage to direct path users between the path and the commercial centers, including a map directory of local businesses along the path</td>
+            <td>Transportation, Open Space, Economic Dev.</td>
+            <td>DPW</td>
+            <td>TAC, TMgr</td>
+            <td>Mid-Term</td>
+            <td>Yes</td>
+            <td>Consultant, construction spending</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Develop a plan to review the condition of private ways and work with residents for a program to improve condition of private ways</td>
+            <td>Transportation, Public Facilities</td>
+            <td>DPW</td>
+            <td>CPC</td>
+            <td>Mid-Term</td>
+            <td>Yes</td>
+            <td>TBD</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Work with MassDOT, DCR and City of Cambridge to improve the efficiency of Massachusetts Avenue/Route 16 signal in Cambridge</td>
+            <td>Transportation</td>
+            <td>DPW</td>
+            <td>TAC</td>
+            <td>Mid-Term</td>
+            <td>No</td>
+            <td>TBD</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Include bicycle friendly design and technology in new road projects</td>
+            <td>Transportation</td>
+            <td>DPW</td>
+            <td>BAC, TAC</td>
+            <td>Mid-Term</td>
+            <td>No</td>
+            <td>TBD</td>
+            <td>Yes</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Work with the MBTA to reduce bus bunching and improve the efficiency of bus service</td>
+            <td>Transportation</td>
+            <td>TAC</td>
+            <td>N/A</td>
+            <td>Mid-Term</td>
+            <td>No</td>
+            <td>TBD</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Update Industrial district zoning to reflect current needs of today’s industrial and innovation uses and markets</td>
+            <td>Economic Dev., Land Use</td>
+            <td>ARB</td>
+            <td>ED</td>
+            <td>Mid-Term</td>
+            <td>Yes</td>
+            <td>Consultant</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Allow and promote development of new collaborative work spaces to attract small business ventures, innovative companies, entrepreneurs, and currently home-based businesses</td>
+            <td>Economic Dev.</td>
+            <td>PCD, BOS</td>
+            <td>A-TED</td>
+            <td>Mid-Term</td>
+            <td>No</td>
+            <td>TBD</td>
+            <td>Yes</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Consider designating single building historic districts</td>
+            <td>Historic/Cultural</td>
+            <td>HC</td>
+            <td>HDC</td>
+            <td>Mid-Term</td>
+            <td>Yes</td>
+            <td>Consultant, Existing Staff</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Create a bylaw to prevent the use of identified invasive species of trees, shrubs, and other plants on Town property and streetscapes</td>
+            <td>Open Space</td>
+            <td>CC</td>
+            <td>BOS, DPW</td>
+            <td>Mid-Term</td>
+            <td>Yes</td>
+            <td>Technical Assistance</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Place preservation restrictions on town-owned historic properties not already protected</td>
+            <td>Historic/Cultural, Public Facilities</td>
+            <td>HC, BOS</td>
+            <td>PCD</td>
+            <td>Mid-Term</td>
+            <td>Yes</td>
+            <td>TBD</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Consider establishing an open space, parks, and recreation facilities maintenance manager position</td>
+            <td>Open Space, Public Facilities</td>
+            <td>DPW</td>
+            <td>CC, PRC, PCD</td>
+            <td>Mid-Term</td>
+            <td>Yes</td>
+            <td>Funding (New Position)</td>
+            <td>Yes</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Identify and implement priority development areas and priority preservation areas</td>
+            <td>Land Use</td>
+            <td>ARB</td>
+            <td>PCD</td>
+            <td>Mid-Term</td>
+            <td>Yes</td>
+            <td>Existing Staff &amp; Volunteers</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Adopt a plan to reduce congestion on north/south roads connecting to Route 2, including consideration of new technology and business models</td>
+            <td>Transportation</td>
+            <td>BOS</td>
+            <td>TAC, PCD</td>
+            <td>Mid-Term</td>
+            <td>No</td>
+            <td>Existing Staff &amp; Volunteers</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Perform a space needs analysis for town-owned buildings, including the schools</td>
+            <td>Public Facilities</td>
+            <td>TMgr</td>
+            <td>PCD</td>
+            <td>Mid-Term</td>
+            <td>Yes</td>
+            <td>Consultant &amp; Existing Staff</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Prepare a feasibility study for an updated Community Center/Senior Center</td>
+            <td>Public Facilities</td>
+            <td>PCD</td>
+            <td>HHS</td>
+            <td>Mid-Term</td>
+            <td>Yes</td>
+            <td>Consultant</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Review the extension of the regional bikeshare program into Arlington</td>
+            <td>Transportation</td>
+            <td>BOS</td>
+            <td>BAC</td>
+            <td>Long-Term</td>
+            <td>No</td>
+            <td>TBD</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Add bicycle lanes on Massachusetts Avenue from Swan Place to Pond Lane to connect lanes created by the Massachusetts Avenue Rebuild Project and the Arlington Safe Travel Project</td>
+            <td>Transportation</td>
+            <td>BOS, DPW</td>
+            <td>BAC, TAC</td>
+            <td>Long-Term</td>
+            <td>Yes</td>
+            <td>TBD</td>
+            <td>Yes</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Advocate to further extend the MBTA Green Line Extension to Mystic Valley Parkway</td>
+            <td>Transportation, Economic Dev.</td>
+            <td>BOS</td>
+            <td>ARB, TAC</td>
+            <td>Long-Term</td>
+            <td>No</td>
+            <td>TBD</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Develop a feasible plan for acquiring the state-owned Ed Burns arena</td>
+            <td>Public Facilities</td>
+            <td>PRC</td>
+            <td>BOS</td>
+            <td>Long-Term</td>
+            <td>Yes</td>
+            <td>Funding</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Revisit East Arlington commercial district parking study from Larry Koff &amp; Associates Commercial Center Revitalization Study. Identify deficiencies (if any) and develop parking management strategies</td>
+            <td>Transportation, Economic Dev.</td>
+            <td>BOS</td>
+            <td>TAC, DPW, APS</td>
+            <td>Ongoing</td>
+            <td>Possibly</td>
+            <td>Consultant &amp; Existing Staff</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Revisit the recommendations contained in the Commercial Center Revitalization Study and implement where compatible with Master Plan recommendations</td>
+            <td>Economic Dev., Land Use, Public Facilities</td>
+            <td>Multiple (see narrative)</td>
+            <td>Multiple</td>
+            <td>Ongoing</td>
+            <td>Yes</td>
+            <td>TBD</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Integrate master plan implementation within the Board of Selectmen/Town Manager annual goal setting process</td>
+            <td>ALL</td>
+            <td>TMgr</td>
+            <td>BOS</td>
+            <td>Ongoing</td>
+            <td>No</td>
+            <td>Existing Staff</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Work with appropriate town committees to assist with an annual process of evaluating master plan implementation and identifying potential amendments to the plan, as appropriate</td>
+            <td>ALL</td>
+            <td>TMgr, PCD</td>
+            <td>BOS, ARB, Vision 2020</td>
+            <td>Ongoing</td>
+            <td>No</td>
+            <td>Existing Volunteers</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Integrate master plan recommendations and implementation actions with the goals, objectives, and action plan of the Town’s current Open Space and Recreation Plan</td>
+            <td>Open Space, Public Facilities</td>
+            <td>OSC</td>
+            <td>CC, PCD</td>
+            <td>Ongoing</td>
+            <td>No</td>
+            <td>Existing Volunteers &amp; Staff</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Continue to support and expand the Safe Routes to School program to encourage more biking and walking to school</td>
+            <td>Transportation</td>
+            <td>APS</td>
+            <td>BOS, TAC</td>
+            <td>Ongoing</td>
+            <td>Yes</td>
+            <td>TBD</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Install wayfinding signage for public parking lots, including maps and parking limits. Post regulations and policies on Town’s website</td>
+            <td>Transportation, Economic Dev.</td>
+            <td>PCD</td>
+            <td>DPW</td>
+            <td>Ongoing</td>
+            <td>Yes</td>
+            <td>TBD</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Address the quality and condition of aging housing stock, including financial assistance programs for homeowners and landlords, as part of Housing Production Plan</td>
+            <td>Housing</td>
+            <td>PCD</td>
+            <td>BOS</td>
+            <td>Ongoing</td>
+            <td>Possibly</td>
+            <td>CDBG, HOME</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Promote policies that support Arlington’s magnet businesses, which boost the overall health of the business districts</td>
+            <td>Economic Dev.</td>
+            <td>BOS</td>
+            <td>A-TED</td>
+            <td>Ongoing</td>
+            <td>Possibly</td>
+            <td>Existing Staff &amp; Volunteers</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Address street tree problems, including the replacement of trees lost due to age, storms and the failed survival of many newly planted trees. Coordinate tree care between the Town and property owners."</td>
+            <td>Public Facilities, Open Space</td>
+            <td>DPW</td>
+            <td>BOS</td>
+            <td>Ongoing</td>
+            <td>Yes</td>
+            <td>Funding</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Develop a plan and schedule to reduce unnecessary roadway pavement in Town street intersections</td>
+            <td>Public Facilities</td>
+            <td>DPW</td>
+            <td>PCD</td>
+            <td>Ongoing</td>
+            <td>No</td>
+            <td>Existing Staff</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Increase budgets for outdoor facilities maintenance.</td>
+            <td>Public Facilities, Open Space</td>
+            <td>TMgr</td>
+            <td>DPW</td>
+            <td>Ongoing</td>
+            <td>Yes</td>
+            <td>Additional Funding</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Prepare maintenance and management plan to support preservation of civic buildings and historic resources (i.e., art, documents, sculpture, historic objects); promote a sense of place for historic districts and landscapes.</td>
+            <td>Historic/Cultural</td>
+            <td>HC, DPW, CPC</td>
+            <td>BOS</td>
+            <td>Ongoing</td>
+            <td>Yes</td>
+            <td>Preservation Architect, Consultant</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Develop and install identifying and educational signage for historic structures and locations;</td>
+            <td>Historic/Cultural</td>
+            <td>HC, HDC, A-TED</td>
+            <td>BOS</td>
+            <td>Ongoing</td>
+            <td>Yes</td>
+            <td>Consultant</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Develop regional cooperative relationships to support the maintenance and care of Arlington’s water resources, most of which are shared with neighboring communities.</td>
+            <td>Open Space</td>
+            <td>BOS, TMgr</td>
+            <td>CC, ABC/ FG</td>
+            <td>Ongoing</td>
+            <td>No</td>
+            <td>Existing Volunteers</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Develop and strengthen relationship with Arlington’s neighboring communities to address projects with regional impacts</td>
+            <td>Open Space</td>
+            <td>TMgr, BoS</td>
+            <td>PCD</td>
+            <td>Ongoing</td>
+            <td>No</td>
+            <td>Existing Staff &amp; Volunteers</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Adopt a policy that recognizes and conveys the importance of Arlington’s arts, culture and historical significance in economic development and tourism</td>
+            <td>Historic/Cultural, Economic Dev.</td>
+            <td>BOS</td>
+            <td>A-TED, PCD, HC</td>
+            <td>Ongoing</td>
+            <td>No</td>
+            <td>Existing Staff &amp; Volunteers</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Expand the storefront and sign enhancement program</td>
+            <td>Economic Dev., Land Use</td>
+            <td>PCD</td>
+            <td>BOS</td>
+            <td>Ongoing</td>
+            <td>No</td>
+            <td>Existing Staff</td>
+            <td>Yes</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Adopt a policy to employ recognized preservation standards when maintaining and repairing the Town’s historic properties</td>
+            <td>Historic/Cultural, Economic Dev., Public Facilities</td>
+            <td>BOS, TMg</td>
+            <td>DPW, ARB, HHS</td>
+            <td>Ongoing</td>
+            <td>No</td>
+            <td>Existing Staff &amp; Volunteers</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Act on 2000 and 2001 Town Meeting votes to acquire the Mugar Land</td>
+            <td>Land Use, Open Space, Public Facilities</td>
+            <td>PCD</td>
+            <td>OSC, BOS</td>
+            <td>Ongoing</td>
+            <td>Yes</td>
+            <td>Existing Staff, Volunteers; Funding</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>Identify actions to further reduce Combined Sewer Overflows into Alewife Brook</td>
+            <td>Open Space</td>
+            <td>BOS, TMgr.</td>
+            <td>DPW, BOH</td>
+            <td>Ongoing</td>
+            <td>Possibly</td>
+            <td>Existing Staff &amp; Consultant</td>
+            <td>&nbsp;</td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
