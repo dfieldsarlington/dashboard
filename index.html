@@ -201,7 +201,7 @@ function dsPieChart(){
                .attr("fill", function(d, i) { return color(i); } ) //set the color for each slice to be chosen from the color function defined above
                .attr("d", arc)     //this creates the actual SVG path using the associated data (pie) with the arc drawing function
 					.append("svg:title") //mouseover title showing the figures
-				   .text(function(d) { return d.data.category + ": " + formatAsPercentage(d.data.measure); });			
+				   .text(function(d) { return d.data.category + ": " + formatAsInteger(d.data.measure); });
 
         d3.selectAll("g.slice").selectAll("path").transition()
 			    .duration(750)
@@ -231,7 +231,7 @@ function dsPieChart(){
 		vis.append("svg:text")
 	     	.attr("dy", ".35em")
 	      .attr("text-anchor", "middle")
-	      .text("Revenue Share 2012")
+	      .text("Race 2010")
 	      .attr("class","title")
 	      ;		    
 
