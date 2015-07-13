@@ -120,7 +120,7 @@ text {
 
 form {
   position: absolute;
-  right: 10px;
+  right: 110px;
   top: 10px;
 }
 
@@ -137,7 +137,6 @@ form {
 
   </head>
   <body>
-  
     <div id="pieChart"></div>
     <div id="barChart"></div>  
     <div id="lineChart"></div>
@@ -165,143 +164,104 @@ var 	formatAsPercentage = d3.format("%"),
 -------------------------------------------
 */
 
-
-
-function dsPieChart(){
-
-	var dataset = [
-			{group: "2010", category: "White", measure: 36717},
-	      {group: "2010", category: "African American", measure: 1040},
-	      {group: "2010", category: "Native American", measure: 49},
-	      {group: "2010", category: "Asian", measure: 3558},
-	      {group: "2010", category: "Other", measure: 1480},
-		  {group: "2000", category: "White", measure: 38561},
-	      {group: "2000", category: "African American", measure: 719},
-	      {group: "2000", category: "Native American", measure: 57},
-	      {group: "2000", category: "Asian", measure: 2113},
-	      {group: "2000", category: "Other", measure: 939},
-	      ]
-	      ;
-		 
-		 // set initial group value
-		var group = "All";
-
-			function datasetPieChosen(group) {
-			var ds = [];
-			for (x in datasetPieChart) {
-			if(datasetPieChart[x].group==group){
-		 	ds.push(datasetPieChart[x]);
-				} 
-			}
-			return ds;
-
-	var 	width = 400,
-		   height = 400,
-		   outerRadius = Math.min(width, height) / 2,
-		   innerRadius = outerRadius * .999,   
-		   // for animation
-		   innerRadiusFinal = outerRadius * .5,
-		   innerRadiusFinal3 = outerRadius* .45,
-		   color = d3.scale.category20()    //builtin range of colors
-		   ;
-	    
-	var vis = d3.select("#pieChart")
-	     .append("svg:svg")              //create the SVG element inside the <body>
-	     .data([dataset])                   //associate our data with the document
-	         .attr("width", width)           //set the width and height of our visualization (these will be attributes of the <svg> tag
-	         .attr("height", height)
-	     		.append("svg:g")                //make a group to hold our pie chart
-	         .attr("transform", "translate(" + outerRadius + "," + outerRadius + ")")    //move the center of the pie chart from 0, 0 to radius, radius
-				;
-				
-   var arc = d3.svg.arc()              //this will create <path> elements for us using arc data
-        	.outerRadius(outerRadius).innerRadius(innerRadius);
-   
-   // for animation
-   var arcFinal = d3.svg.arc().innerRadius(innerRadiusFinal).outerRadius(outerRadius);
-	var arcFinal3 = d3.svg.arc().innerRadius(innerRadiusFinal3).outerRadius(outerRadius);
-
-   var pie = d3.layout.pie()           //this will create arc data for us given a list of values
-        .value(function(d) { return d.measure; });    //we must tell it out to access the value of each element in our data array
-
-   var arcs = vis.selectAll("g.slice")     //this selects all <g> elements with class slice (there aren't any yet)
-        .data(pie)                          //associate the generated pie data (an array of arcs, each having startAngle, endAngle and value properties) 
-        .enter()                            //this will create <g> elements for every "extra" data element that should be associated with a selection. The result is creating a <g> for every object in the data array
-            .append("svg:g")                //create a group to hold each slice (we will have a <path> and a <text> element associated with each slice)
-               .attr("class", "slice")    //allow us to style things in the slices (like text)
-               .on("mouseover", mouseover)
-    				.on("mouseout", mouseout)
-    				.on("click", up)
-    				;
-    				
-        arcs.append("svg:path")
-               .attr("fill", function(d, i) { return color(i); } ) //set the color for each slice to be chosen from the color function defined above
-               .attr("d", arc)     //this creates the actual SVG path using the associated data (pie) with the arc drawing function
-					.append("svg:title") //mouseover title showing the figures
-				   .text(function(d) { return d.data.category + ": " + formatAsInteger(d.data.measure); });
-
-        d3.selectAll("g.slice").selectAll("path").transition()
-			    .duration(750)
-			    .delay(10)
-			    .attr("d", arcFinal )
-			    ;
-	
-	  // Add a label to the larger arcs, translated to the arc centroid and rotated.
-	  // source: http://bl.ocks.org/1305337#index.html
-	  arcs.filter(function(d) { return d.endAngle - d.startAngle > .2; })
-	  		.append("svg:text")
-	      .attr("dy", ".35em")
-	      .attr("text-anchor", "middle")
-	      .attr("transform", function(d) { return "translate(" + arcFinal.centroid(d) + ")rotate(" + angle(d) + ")"; })
-	      //.text(function(d) { return formatAsPercentage(d.value); })
-	      .text(function(d) { return d.data.category; })
-	      ;
-	   
-	   // Computes the label angle of an arc, converting from radians to degrees.
-		function angle(d) {
-		    var a = (d.startAngle + d.endAngle) * 90 / Math.PI - 90;
-		    return a > 90 ? a - 180 : a;
-		}
-		    
+var dataset = {
+		2010: [36717, 1040, 49, 3558, 1480],
+		2000: [38561, 719, 57, 2113, 939],
+		1990: [42485, 598, 33, 1351, 163],
+		1980: [46954, 272, 32, 704, 257],
+		1970: [53002, 164, 16, 277, 65],
+		1960: [49824, 39, 90]
+		};
 		
-		// Pie chart title			
-		vis.append("svg:text")
-	     	.attr("dy", ".35em")
-	      .attr("text-anchor", "middle")
-	      .text("Race 2010")
-	      .attr("class","title")
-	      ;		    
+var width = 960,
+  height = 500,
+  radius = Math.min(width, height) / 2;
 
+var enterAntiClockwise = {
+  startAngle: Math.PI * 2,
+  endAngle: Math.PI * 2
+};
 
-		
-	function mouseover() {
-	  d3.select(this).select("path").transition()
-	      .duration(750)
-	        		//.attr("stroke","red")
-	        		//.attr("stroke-width", 1.5)
-	        		.attr("d", arcFinal3)
-	        		;
-	}
-	
-	function mouseout() {
-	  d3.select(this).select("path").transition()
-	      .duration(750)
-	        		//.attr("stroke","blue")
-	        		//.attr("stroke-width", 1.5)
-	        		.attr("d", arcFinal)
-	        		;
-	}
-	
-	function up(d, i) {
+var color = d3.scale.category20();
+
+var pie = d3.layout.pie()
+  .sort(null);
+
+var arc = d3.svg.arc()
+  .innerRadius(radius - 100)
+  .outerRadius(radius - 20);
+
+var svg = d3.select("body").append("svg")
+  .attr("width", width)
+  .attr("height", height)
+  .append("g")
+  .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+var path = svg.selectAll("path")
+  .data(pie(dataset.2010))
+  .enter().append("path")
+  .attr("fill", function(d, i) { return color(i); })
+  .attr("d", arc)
+  .each(function(d) { this._current = d; }); // store the initial values
+
+d3.selectAll("input").on("change", change);
+
+var timeout = setTimeout(function() {
+  d3.select("input[value=\"2000\"]").property("checked", true).each(change);
+}, 2000);
+
+function change() {
+  clearTimeout(timeout);
+  path = path.data(pie(dataset[this.value])); // update the data
+  // set the start and end angles to Math.PI * 2 so we can transition
+  // anticlockwise to the actual values later
+  path.enter().append("path")
+      .attr("fill", function (d, i) {
+        return color(i);
+      })
+      .attr("d", arc(enterAntiClockwise))
+      .each(function (d) {
+        this._current = {
+          data: d.data,
+          value: d.value,
+          startAngle: enterAntiClockwise.startAngle,
+          endAngle: enterAntiClockwise.endAngle
+        };
+      }); // store the initial values
+
+  path.exit()
+      .transition()
+      .duration(750)
+      .attrTween('d', arcTweenOut)
+      .remove() // now remove the exiting arcs
+
+  path.transition().duration(750).attrTween("d", arcTween); // redraw the arcs
+}
+
+// Store the displayed angles in _current.
+// Then, interpolate from _current to the new angles.
+// During the transition, _current is updated in-place by d3.interpolate.
+function arcTween(a) {
+  var i = d3.interpolate(this._current, a);
+  this._current = i(0);
+  return function(t) {
+  return arc(i(t));
+  };
+}
+// Interpolate exiting arcs start and end angles to Math.PI * 2
+// so that they 'exit' at the end of the data
+function arcTweenOut(a) {
+  var i = d3.interpolate(this._current, {startAngle: Math.PI * 2, endAngle: Math.PI * 2, value: 0});
+  this._current = i(0);
+  return function (t) {
+    return arc(i(t));
+  };
 	
 				/* update bar chart when user selects piece of the pie chart */
 				//updateBarChart(dataset[i].category);
 				updateBarChart(d.data.category, color(i));
 				updateLineChart(d.data.category, color(i));
 			 
-	}
-}
-
 dsPieChart();
 
 /*
