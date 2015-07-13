@@ -70,7 +70,7 @@ var svg = d3.select("body").append("svg")
   .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
 var path = svg.selectAll("path")
-  .data(pie(dataset.2010))
+  .data(pie(dataset))
   .enter().append("path")
   .attr("fill", function(d, i) { return color(i); })
   .attr("d", arc)
