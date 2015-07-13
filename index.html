@@ -113,7 +113,14 @@ td {
 	font-weight: bold;
 	/*font-style: italic;*/
 }
-				 
+<form>
+  <label><input type="radio" name="dataset" value="1960"> 1960</label>
+  <label><input type="radio" name="dataset" value="1970"> 1970</label>
+  <label><input type="radio" name="dataset" value="1980"> 1980</label>
+  <label><input type="radio" name="dataset" value="1990"> 1990</label>
+  <label><input type="radio" name="dataset" value="2000"> 2000</label>
+  <label><input type="radio" name="dataset" value="2010" checked> 2010</label>
+</form> 
     </style>
   </head>
   <body>
@@ -150,13 +157,30 @@ var 	formatAsPercentage = d3.format("%"),
 function dsPieChart(){
 
 	var dataset = [
-			{category: "White", measure: 36717},
-	      {category: "African American", measure: 1040},
-	      {category: "Native American", measure: 49},
-	      {category: "Asian", measure: 3558},
-	      {category: "Other", measure: 1480},
+			{group: "2010", category: "White", measure: 36717},
+	      {group: "2010", category: "African American", measure: 1040},
+	      {group: "2010", category: "Native American", measure: 49},
+	      {group: "2010", category: "Asian", measure: 3558},
+	      {group: "2010", category: "Other", measure: 1480},
+		  {group: "2000", category: "White", measure: 38561},
+	      {group: "2000", category: "African American", measure: 719},
+	      {group: "2000", category: "Native American", measure: 57},
+	      {group: "2000", category: "Asian", measure: 2113},
+	      {group: "2000", category: "Other", measure: 939},
 	      ]
 	      ;
+		 
+		 // set initial group value
+		var group = "All";
+
+			function datasetPieChosen(group) {
+			var ds = [];
+			for (x in datasetPieChart) {
+			if(datasetPieChart[x].group==group){
+		 	ds.push(datasetPieChart[x]);
+				} 
+			}
+			return ds;
 
 	var 	width = 400,
 		   height = 400,
